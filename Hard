@@ -1,0 +1,97 @@
+-- ============================================================
+-- TRYARD ANIMATION PACK
+-- ============================================================
+local TryardAnims = {
+    idle1 = "rbxassetid://133806214992291",
+    idle2 = "rbxassetid://94970088341563",
+    walk  = "rbxassetid://707897309",
+    run   = "rbxassetid://707861613",
+    jump  = "rbxassetid://116936326516985",
+    fall  = "rbxassetid://116936326516985",
+    climb = "rbxassetid://116936326516985",
+    swim  = "rbxassetid://116936326516985",
+    swimidle = "rbxassetid://116936326516985",
+}
+task.spawn(function()
+    pcall(function() ContentProvider:PreloadAsync({
+        TryardAnims.idle1, TryardAnims.idle2, TryardAnims.walk, TryardAnims.run,
+        TryardAnims.jump, TryardAnims.fall, TryardAnims.climb, TryardAnims.swim, TryardAnims.swimidle,
+    }) end)
+end)
+local tryardHeartbeatConn = nil
+local originalTryardAnims = nil
+local function isTryardPackAnim(id) for _,v in pairs(TryardAnims) do if v==id then return true end end return false end
+local function saveOriginalTryardAnims(char)
+    local animate = char:FindFirstChild("Animate")
+    if not animate then return end
+    local function g(obj) return obj and obj.AnimationId or nil end
+    local ids = {
+        idle1 = g(animate.idle and animate.idle.Animation1),
+        idle2 = g(animate.idle and animate.idle.Animation2),
+        walk  = g(animate.walk and animate.walk.WalkAnim),
+        run   = g(animate.run  and animate.run.RunAnim),
+        jump  = g(animate.jump and animate.jump.JumpAnim),
+        fall  = g(animate.fall and animate.fall.FallAnim),
+        climb = g(animate.climb and animate.climb.ClimbAnim),
+        swim  = g(animate.swim and animate.swim.Swim),
+        swimidle = g(animate.swimidle and animate.swimidle.SwimIdle),
+    }
+    if not isTryardPackAnim(ids.walk) then originalTryardAnims = ids end
+end
+local function applyTryardAnimPack(char)
+    local animate = char:FindFirstChild("Animate")
+    if not animate then return end
+    local function s(obj,id) if obj then obj.AnimationId=id end end
+    s(animate.idle and animate.idle.Animation1, TryardAnims.idle1)
+    s(animate.idle and animate.idle.Animation2, TryardAnims.idle2)
+    s(animate.walk and animate.walk.WalkAnim, TryardAnims.walk)
+    s(animate.run  and animate.run.RunAnim,   TryardAnims.run)
+    s(animate.jump and animate.jump.JumpAnim, TryardAnims.jump)
+    s(animate.fall and animate.fall.FallAnim, TryardAnims.fall)
+    s(animate.climb and animate.climb.ClimbAnim, TryardAnims.climb)
+    s(animate.swim and animate.swim.Swim, TryardAnims.swim)
+    s(animate.swimidle and animate.swimidle.SwimIdle, TryardAnims.swimidle)
+end
+local function stopTryardAnim()
+    if tryardHeartbeatConn then tryardHeartbeatConn:Disconnect(); tryardHeartbeatConn=nil end
+    if originalTryardAnims and LP.Character then
+        local animate = LP.Character:FindFirstChild("Animate")
+        if animate then
+            local function s(obj,id) if obj then obj.AnimationId=id end end
+            s(animate.idle and animate.idle.Animation1, originalTryardAnims.idle1)
+            s(animate.idle and animate.idle.Animation2, originalTryardAnims.idle2)
+            s(animate.walk and animate.walk.WalkAnim, originalTryardAnims.walk)
+            s(animate.run  and animate.run.RunAnim,   originalTryardAnims.run)
+            s(animate.jump and animate.jump.JumpAnim, originalTryardAnims.jump)
+            s(animate.fall and animate.fall.FallAnim, originalTryardAnims.fall)
+            s(animate.climb and animate.climb.ClimbAnim, originalTryardAnims.climb)
+            s(animate.swim and animate.swim.Swim, originalTryardAnims.swim)
+            s(animate.swimidle and animate.swimidle.SwimIdle, originalTryardAnims.swimidle)
+        end
+    end
+end
+local function startTryardAnim()
+    if tryardHeartbeatConn then tryardHeartbeatConn:Disconnect() end
+    local char = LP.Character
+    if char then
+        saveOriginalTryardAnims(char)
+        applyTryardAnimPack(char)
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            for _, track in ipairs(hum:GetPlayingAnimationTracks()) do track:Stop(0) end
+            hum:ChangeState(Enum.HumanoidStateType.Running)
+        end
+    end
+    tryardHeartbeatConn = RunService.Heartbeat:Connect(function()
+        if not State.tryardAnimEnabled then return end
+        local c = LP.Character
+        if c then applyTryardAnimPack(c) end
+    end)
+end
+LP.CharacterAdded:Connect(function(char)
+    task.wait(0.5)
+    if State.tryardAnimEnabled and tryardHeartbeatConn then
+        saveOriginalTryardAnims(char)
+        applyTryardAnimPack(char)
+    end
+end)
