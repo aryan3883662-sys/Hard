@@ -1,0 +1,197 @@
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = player.PlayerGui
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 240, 0, 180)
+Frame.Position = UDim2.new(0, 20, 0, 20)
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Frame.Parent = ScreenGui
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1,0,0,40)
+Title.BackgroundTransparency = 1
+Title.Text = "Headless & Horns"
+Title.TextColor3 = Color3.new(1,1,1)
+Title.TextSize = 20
+Title.Font = Enum.Font.SourceSansBold
+Title.Parent = Frame
+
+local HeadlessBtn = Instance.new("TextButton")
+HeadlessBtn.Size = UDim2.new(0.9,0,0,45)
+HeadlessBtn.Position = UDim2.new(0.05,0,0,50)
+HeadlessBtn.BackgroundColor3 = Color3.fromRGB(120,0,0)
+HeadlessBtn.Text = "Headless: OFF"
+HeadlessBtn.TextColor3 = Color3.new(1,1,1)
+HeadlessBtn.TextSize = 18
+HeadlessBtn.Parent = Frame
+
+local HornsBtn = Instance.new("TextButton")
+HornsBtn.Size = UDim2.new(0.9,0,0,45)
+HornsBtn.Position = UDim2.new(0.05,0,0,105)
+HornsBtn.BackgroundColor3 = Color3.fromRGB(0,100,0)
+HornsBtn.Text = "Horns: OFF"
+HornsBtn.TextColor3 = Color3.new(1,1,1)
+HornsBtn.TextSize = 18
+HornsBtn.Parent = Frame
+
+local isHeadless = false
+local isHorns = false
+
+local HORNS_ASSET_ID = "rbxassetid://1744060292"
+local HORNS_TAG = "CustomHornsAccessory"
+
+local function applyHeadless(head)
+	if not head then return end
+	head.Transparency = 1
+	for _, v in pairs(head:GetDescendants()) do
+		if v:IsA("Decal") or v:IsA("Texture") or (v:IsA("SpecialMesh") and v.Name:lower():find("face")) then
+			v:Destroy()
+		end
+	end
+end
+
+local function removeHorns(char)
+	if not char then return end
+	for _, v in pairs(char:GetChildren()) do
+		if v:IsA("Accessory") and v:GetAttribute(HORNS_TAG) then
+			v:Destroy()
+		end
+	end
+end
+
+local function weldAccessoryToHead(accessory, head)
+	local handle = accessory:FindFirstChild("Handle")
+	if not handle then
+		warn("Horns: accessory has no Handle part")
+		return false
+	end
+
+	local accessoryAttachment = handle:FindFirstChildWhichIsA("Attachment")
+	if not accessoryAttachment then
+		warn("Horns: Handle has no Attachment")
+		return false
+	end
+
+	local headAttachment = head:FindFirstChild(accessoryAttachment.Name)
+		or head:FindFirstChild("HatAttachment")
+
+	if not headAttachment then
+		warn("Horns: no matching attachment found on head")
+		return false
+	end
+
+	handle.CFrame = headAttachment.WorldCFrame * accessoryAttachment.CFrame:Inverse()
+
+	local weld = Instance.new("Weld")
+	weld.Name = "HornsWeld"
+	weld.Part0 = headAttachment.Parent
+	weld.Part1 = handle
+	weld.C0 = headAttachment.CFrame
+	weld.C1 = accessoryAttachment.CFrame
+	weld.Parent = handle
+
+	handle.Anchored = false
+	handle.CanCollide = false
+
+	return true
+end
+
+local function applyHorns(char)
+	if not char then return end
+	local head = char:FindFirstChild("Head")
+	if not head then
+		warn("Horns: no Head found on character")
+		return
+	end
+
+	removeHorns(char)
+
+	local success, objects = pcall(function()
+		return game:GetObjects(HORNS_ASSET_ID)
+	end)
+
+	if not success or not objects or not objects[1] then
+		warn("Horns: failed to load asset -- " .. tostring(objects))
+		return
+	end
+
+	local item = objects[1]
+
+	local accessory = nil
+	if item:IsA("Accessory") then
+		accessory = item
+	else
+		accessory = item:FindFirstChildOfClass("Accessory")
+	end
+
+	if not accessory then
+		warn("Horns: loaded asset did not contain an Accessory instance")
+		return
+	end
+
+	accessory:SetAttribute(HORNS_TAG, true)
+	accessory.Parent = char
+
+	local welded = weldAccessoryToHead(accessory, head)
+
+	if not welded then
+		local humanoid = char:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			local ok = pcall(function()
+				humanoid:AddAccessory(accessory)
+			end)
+			if not ok then
+				warn("Horns: AddAccessory fallback also failed")
+				return
+			end
+		end
+	end
+
+	print("Horns applied")
+end
+
+HeadlessBtn.MouseButton1Click:Connect(function()
+	isHeadless = not isHeadless
+	HeadlessBtn.Text = "Headless: " .. (isHeadless and "ON" or "OFF")
+	HeadlessBtn.BackgroundColor3 = isHeadless and Color3.fromRGB(0,140,0) or Color3.fromRGB(120,0,0)
+
+	if isHeadless then
+		local head = character and character:FindFirstChild("Head")
+		if head then applyHeadless(head) end
+	else
+		local head = character and character:FindFirstChild("Head")
+		if head then head.Transparency = 0 end
+	end
+end)
+
+HornsBtn.MouseButton1Click:Connect(function()
+	isHorns = not isHorns
+	HornsBtn.Text = "Horns: " .. (isHorns and "ON" or "OFF")
+	HornsBtn.BackgroundColor3 = isHorns and Color3.fromRGB(0,140,0) or Color3.fromRGB(120,0,0)
+
+	if isHorns then
+		applyHorns(character)
+	else
+		removeHorns(character)
+	end
+end)
+
+player.CharacterAdded:Connect(function(newChar)
+	character = newChar
+	task.wait(1.2)
+	if isHeadless then
+		local head = newChar:FindFirstChild("Head")
+		if head then applyHeadless(head) end
+	end
+	if isHorns then
+		applyHorns(newChar)
+	end
+end)
+
+task.wait(1)
+print("discord.gg/blossomhubbb")
