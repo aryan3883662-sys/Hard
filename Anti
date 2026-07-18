@@ -1,0 +1,73 @@
+   -- ============================================================
+    -- ANTI RAGDOLL (undetected unpatched implementation)
+    -- ============================================================
+    local _arCached = {}
+
+    local function _arCache()
+        local char = LP.Character; if not char then return false end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not hum or not root then return false end
+        _arCached = { character=char, humanoid=hum, root=root }
+        workspace.CurrentCamera.CameraSubject = hum
+        return true
+    end
+
+    local function _arIsRagdolled()
+        local hum = _arCached.humanoid; if not hum then return false end
+        local st = hum:GetState()
+        if st==Enum.HumanoidStateType.Physics or st==Enum.HumanoidStateType.Ragdoll or st==Enum.HumanoidStateType.FallingDown then return true end
+        local endTime = LP:GetAttribute("RagdollEndTime")
+        if endTime then
+            local now = workspace:GetServerTimeNow()
+            if (endTime - now) > 0 then return true end
+        end
+        return false
+    end
+
+    local function _arRemoveConstraints()
+        if not _arCached.character then return end
+        for _, v in ipairs(_arCached.character:GetDescendants()) do
+            if v:IsA("BallSocketConstraint") or (v:IsA("Attachment") and v.Name:find("RagdollAttachment")) then
+                pcall(function() v:Destroy() end)
+            end
+        end
+    end
+
+    local function _arForceExit()
+        local hum = _arCached.humanoid; local root = _arCached.root
+        if not hum or not root then return end
+        pcall(function() LP:SetAttribute("RagdollEndTime", workspace:GetServerTimeNow()) end)
+        if hum.Health > 0 then hum:ChangeState(Enum.HumanoidStateType.Running) end
+        root.Anchored = false
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+        root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, math.rad(root.Orientation.Y), 0)
+        local cam = workspace.CurrentCamera
+        if cam.CameraSubject ~= hum then cam.CameraSubject = hum end
+    end
+
+    startAntiRagdoll = function()
+        if Conns.antiRag then return end
+        _arCache()
+        Conns.antiRag = RunService.RenderStepped:Connect(function()
+            if not _arCached.humanoid or not _arCached.humanoid.Parent then return end
+            if _arIsRagdolled() then
+                _arRemoveConstraints()
+                _arForceExit()
+            end
+        end)
+    end
+    stopAntiRagdoll = function()
+        if Conns.antiRag then Conns.antiRag:Disconnect(); Conns.antiRag = nil end
+        State.countdownActive = false
+        _arCached = {}
+    end
+
+    -- Re-cache on respawn
+    LP.CharacterAdded:Connect(function()
+        if State.antiRagdollEnabled then
+            task.wait(0.5)
+            _arCache()
+        end
+    end)
