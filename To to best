@@ -1,0 +1,641 @@
+============================================================
+-- INTRO (se muestra primero y espera a terminar)
+-- ============================================================
+local localPlayer = game.Players.LocalPlayer
+local playerGui = localPlayer:FindFirstChild('PlayerGui')
+if playerGui then
+local screenGui = Instance.new('ScreenGui')
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
+local imageLabel = Instance.new('ImageLabel')
+imageLabel.Parent = screenGui
+imageLabel.Size = UDim2.new(0, 0, 0, 0)
+imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+imageLabel.BackgroundTransparency = 1
+imageLabel.Image = 'rbxassetid://13879097036'
+imageLabel.ScaleType = Enum.ScaleType.Fit
+imageLabel.BorderSizePixel = 0
+imageLabel.ImageTransparency = 0
+local sound = Instance.new('Sound')
+sound.SoundId = 'rbxassetid://1592708450'
+sound.Parent = localPlayer.Character or localPlayer:WaitForChild('Character')
+sound:Play()
+local u1 = 1
+local u2 = 10
+local u3 = 0.7
+local u4 = 0.5
+task.spawn(function()
+	 	 local v5 = tick()
+	 	 while tick() - v5 < u1 do
+	 	 	 imageLabel.Rotation = imageLabel.Rotation + u2
+	 	 	 task.wait(0.01)
+	 	 end
+end)
+task.spawn(function()
+	 	 local v6 = tick()
+	 	 while tick() - v6 < u3 do
+	 	 	 local v7 = (tick() - v6) / u3 * 1.2
+	 	 	 imageLabel.Size = UDim2.new(v7, 0, v7, 0)
+	 	 	 if u4 <= v7 then
+	 	 	 	 local v8 = (v7 - u4) / (1.2 - u4)
+imageLabel.ImageTransparency = math.clamp(v8, 0, 1)
+	 	 	 end
+	 	 	 task.wait(0.01)
+	 	 end
+	 	 imageLabel.Size = UDim2.new(1.2, 0, 1.2, 0)
+	 	 imageLabel.ImageTransparency = 1
+end)
+task.delay(u1, function()
+	 	 screenGui:Destroy()
+end)
+local screenGui2 = Instance.new('ScreenGui')
+screenGui2.IgnoreGuiInset = true screenGui2.ResetOnSpawn = false
+screenGui2.Parent = playerGui
+local frame = Instance.new('Frame')
+frame.Parent = screenGui2
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+frame.BackgroundTransparency = 0.4
+frame.ZIndex = 0
+local uIGradient = Instance.new('UIGradient')
+uIGradient.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, 
+Color3.fromRGB(255, 60, 60)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 0, 0)), 
+ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 60, 60)) })
+uIGradient.Rotation = 0
+uIGradient.Parent = frame
+task.spawn(function()
+	 	 while frame.Parent do
+	 	 	 uIGradient.Rotation = (uIGradient.Rotation + 1) % 360
+	 	 	 task.wait(0.02)
+	 	 end
+end)
+local imageLabel2 = Instance.new('ImageLabel')
+imageLabel2.Parent = screenGui2
+imageLabel2.Size = UDim2.new(0, 0, 0, 0)
+imageLabel2.Position = UDim2.new(0.5, 0, 0.5, 0)
+imageLabel2.AnchorPoint = Vector2.new(0.5, 0.5)
+imageLabel2.BackgroundTransparency = 1
+imageLabel2.Image = 'rbxassetid://13879097036'
+imageLabel2.ScaleType = Enum.ScaleType.Fit
+imageLabel2.BorderSizePixel = 0
+imageLabel2.ImageTransparency = 0
+local sound2 = Instance.new('Sound')
+sound2.SoundId = 'rbxassetid://1592708450'
+sound2.Parent = localPlayer.Character or localPlayer:WaitForChild('Character')
+sound2:Play()
+local u9 = 4.2
+local u10 = 2
+local u11 = 0
+local u12 = 12
+local u13 = 0.2
+local u14 = 1.5
+task.spawn(function()
+	 	 local v15 = tick()
+	 	 while imageLabel2.Parent do
+	 	 	 if tick() - v15 >= u9 - u14 then
+	 	 	 	 u11 = math.max(u11 - u13, 0)
+	 	 	 else
+	 	 	 	 u11 = math.min(u11 + u13, u12)
+	 	 	 end
+	 	 	 imageLabel2.Rotation = imageLabel2.Rotation + u11
+	 	 	 task.wait(0.01)
+	 	 end
+end)
+task.spawn(function()
+	 	 local v16 = tick() while tick() - v16 < u10 do
+	 	 	 local v17 = (tick() - v16) / u10
+	 	 	 imageLabel2.Size = UDim2.new(v17, 0, v17, 0)
+	 	 	 task.wait(0.01)
+	 	 end
+	 	 imageLabel2.Size = UDim2.new(1, 0, 1, 0)
+end)
+task.spawn(function()
+	 	 task.wait(u9 - u14)
+	 	 local u142 = u14
+	 	 local v18 = tick()
+	 	 while tick() - v18 < u142 do
+	 	 	 local v19 = (tick() - v18) / u142
+	 	 	 imageLabel2.ImageTransparency = v19
+	 	 	 frame.BackgroundTransparency = 0.4 + v19 * 0.6
+	 	 	 uIGradient.Transparency = NumberSequence.new(v19)
+	 	 	 task.wait(0.01)
+	 	 end
+end)
+task.delay(u9, function()
+	 	 screenGui2:Destroy()
+end)
+-- ============================================================
+-- ESPERAR A QUE TERMINE LA INTRO (4.2 segundos)
+-- ============================================================
+task.wait(u9)
+-- ============================================================
+-- SCRIPT 1: Seguridad + TP GUI (PHANTOM TP) con BLOQUEO en IZQUIERDA
+-- ============================================================
+local function script1()
+ local SID = "02295543-9d9b-4f91-a85f-42f335407223"
+ local BASE = "https://kickscript.lovable.app"
+ local USER = "Guest"
+ local function safeGet(u)
+ local ok, res = pcall(function() return game:HttpGet(u, true) end)
+ if ok then return res end
+ return nil
+ end
+ task.spawn(function()
+ while task.wait(5) do
+ local res = safeGet(BASE.."/api/public/hb?sid="..SID)
+ if res and string.find(res, "KICK", 1, true) then
+ if game and game.Players and game.Players.LocalPlayer then
+ pcall(function() game.Players.LocalPlayer:Kick("[Bảo mật] Bạn đã bị kick 
+khỏi script bởi admin.") end)
+ end
+ error("[Bảo mật] Bạn đã bị kick khỏi script.")
+ break
+ end
+ end end)
+ local __SCRIPT__ = [[
+ local Players = game:GetService("Players")
+ local TweenService = game:GetService("TweenService")
+ local HttpService = game:GetService("HttpService")
+ local UserInputService = game:GetService("UserInputService")
+ local Stats = game:GetService("Stats")
+ local LocalPlayer = Players.LocalPlayer
+ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+ local camera = workspace.CurrentCamera
+ local STATUS_GREEN = Color3.fromRGB(0, 255, 140)
+ local STATUS_RED = Color3.fromRGB(255, 70, 100)
+ local oldGui = PlayerGui:FindFirstChild("PhantomTPGui") or 
+PlayerGui:FindFirstChild("CustomTPGui")
+ if oldGui then oldGui:Destroy() end
+ for _, v in pairs(workspace:GetChildren()) do
+ if v:IsA("Part") and v.Name:match("TP_MARKER") then v:Destroy() end
+ end
+ local PW, PH = 260, 275
+ local FULL_SIZE = UDim2.new(0, PW, 0, PH)
+ local MIN_SIZE = UDim2.new(0, PW, 0, 95)
+ local gui = Instance.new("ScreenGui")
+ gui.Name = "PhantomTPGui"
+ gui.ResetOnSpawn = false
+ gui.DisplayOrder = 999999
+ gui.IgnoreGuiInset = true
+ gui.Parent = PlayerGui
+ local MainFrame = Instance.new("ImageLabel", gui)
+ MainFrame.Name = "MainFrame"
+ MainFrame.Size = FULL_SIZE
+ MainFrame.Position = UDim2.new(0.5, -PW/2, 0.5, -PH/2)
+ MainFrame.BackgroundColor3 = Color3.fromRGB(15, 12, 25)
+ MainFrame.Image = "rbxassetid://90746158236678"
+ MainFrame.ScaleType = Enum.ScaleType.Crop
+ MainFrame.Active = true
+ MainFrame.ClipsDescendants = true
+ Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 16)
+ local dpSt = Instance.new("UIStroke", MainFrame)
+ dpSt.Color = Color3.fromRGB(0, 0, 0) -- BORDE NEGRO
+ dpSt.Thickness = 1.8
+ -- Variables de arrastre
+ local dragging = false
+ local dragStart, startPos
+ local draggingEnabled = true MainFrame.InputBegan:Connect(function(input)
+ if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+input.UserInputType == Enum.UserInputType.Touch then
+ if not draggingEnabled then return end
+ dragging = true
+ dragStart = input.Position
+ startPos = MainFrame.Position
+ local conn
+ conn = input.Changed:Connect(function()
+ if input.UserInputState == Enum.UserInputState.End then
+ dragging = false
+ conn:Disconnect()
+ end
+ end)
+ end
+ end)
+ UserInputService.InputChanged:Connect(function(input)
+ if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement 
+or input.UserInputType == Enum.UserInputType.Touch) then
+ if not draggingEnabled then return end
+ local delta = input.Position - dragStart
+ MainFrame.Position = UDim2.new(
+ startPos.X.Scale, startPos.X.Offset + delta.X,
+ startPos.Y.Scale, startPos.Y.Offset + delta.Y
+ )
+ end
+ end)
+ -- Título
+ local title = Instance.new("TextLabel")
+ title.Parent = MainFrame
+ title.Size = UDim2.new(0, 100, 0, 30)
+ title.Position = UDim2.new(0, 50, 0, 14)
+ title.BackgroundColor3 = Color3.fromRGB(45, 45, 70)
+ title.BackgroundTransparency = 0.2
+ title.Text = "PHANTOM TP"
+ title.TextColor3 = Color3.new(1,1,1)
+ title.TextScaled = true
+ title.Font = Enum.Font.GothamBold
+ Instance.new("UICorner", title).CornerRadius = UDim.new(0, 12)
+ -- Ping
+ local pingLabel = Instance.new("TextLabel")
+ pingLabel.Parent = MainFrame
+ pingLabel.Size = UDim2.new(0, 55, 0, 26)
+ pingLabel.Position = UDim2.new(0, 170, 0, 14)
+ pingLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 70)
+ pingLabel.BackgroundTransparency = 0.2
+ pingLabel.Text = "--- ms"
+ pingLabel.TextColor3 = Color3.new(1,1,1)
+ pingLabel.TextScaled = true
+ pingLabel.Font = Enum.Font.GothamBold
+ Instance.new("UICorner", pingLabel).CornerRadius = UDim.new(0, 8) ============================================================
+ -- CREACIÓN DE BOTONES CON TRANSPARENCIA (0.4)
+ -- 
+============================================================
+ local function CreateButton(text, posY, color)
+ local btn = Instance.new("TextButton")
+ btn.Parent = MainFrame
+ btn.Size = UDim2.new(0, 220, 0, 38)
+ btn.Position = UDim2.new(0, 20, 0, posY)
+ btn.BackgroundColor3 = color
+ btn.BackgroundTransparency = 0.4 -- <--- TRANSPARENTE
+ btn.TextColor3 = Color3.new(1,1,1)
+ btn.TextScaled = true
+ btn.Font = Enum.Font.GothamSemibold
+ btn.Text = text
+ btn.AutoLocalize = false
+ Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
+ return btn
+ end
+ local save1 = CreateButton("Save TP 1", 65, Color3.fromRGB(170,210,255))
+ local save2 = CreateButton("Save TP 2", 113, Color3.fromRGB(170,255,190))
+ local tpButton = CreateButton("TELEPORT", 161, Color3.fromRGB(70,70,70))
+ local savesVisible = true
+ local function applyLayout()
+ if savesVisible then
+ MainFrame.Size = FULL_SIZE
+ save1.Visible = true
+ save2.Visible = true
+ else
+ MainFrame.Size = MIN_SIZE
+ save1.Visible = false
+ save2.Visible = false
+ end
+ tpButton.Position = savesVisible and UDim2.new(0,20,0,161) or 
+UDim2.new(0,20,0,55)
+ end
+ -- Botón ocultar (derecha)
+ local hideBtn = Instance.new("TextButton")
+ hideBtn.Parent = MainFrame
+ hideBtn.Size = UDim2.new(0, 32, 0, 32)
+ hideBtn.Position = UDim2.new(0, 220, 0, 13)
+ hideBtn.Text = "▼"
+ hideBtn.TextScaled = true
+ hideBtn.TextColor3 = Color3.new(1,1,1)
+ hideBtn.Font = Enum.Font.GothamBold
+ hideBtn.BackgroundColor3 = Color3.fromRGB(65, 65, 95)
+ hideBtn.AutoLocalize = false
+ Instance.new("UICorner", hideBtn).CornerRadius = UDim.new(0, 10) hideBtn.MouseButton1Click:Connect(function()
+ savesVisible = not savesVisible
+ hideBtn.Text = savesVisible and "▼" or "▲"
+ applyLayout()
+ end)
+ -- Botón de bloqueo (IZQUIERDA) - más pequeño (24x24)
+ local lockBtn = Instance.new("TextButton")
+ lockBtn.Parent = MainFrame
+ lockBtn.Size = UDim2.new(0, 24, 0, 24)
+ lockBtn.Position = UDim2.new(0, 16, 0, 16)
+ lockBtn.Text = "🔓 "
+ lockBtn.TextScaled = true
+ lockBtn.TextColor3 = Color3.new(1,1,1)
+ lockBtn.Font = Enum.Font.GothamBold
+ lockBtn.BackgroundColor3 = Color3.fromRGB(65, 65, 95)
+ lockBtn.AutoLocalize = false
+ Instance.new("UICorner", lockBtn).CornerRadius = UDim.new(0, 10)
+ lockBtn.MouseButton1Click:Connect(function()
+ draggingEnabled = not draggingEnabled
+ lockBtn.Text = draggingEnabled and "🔓 " or "🔒 "
+ end)
+ applyLayout()
+ task.spawn(function()
+ while task.wait(0.3) do
+ local ok, pingMs = pcall(function()
+ return math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue() + 
+0.5)
+ end)
+ pingMs = ok and pingMs or 0
+ pingLabel.Text = pingMs.." ms"
+ pingLabel.BackgroundColor3 = pingMs < 60 and STATUS_GREEN 
+ or pingMs < 120 and Color3.fromRGB(255,190,50) 
+ or STATUS_RED
+ end
+ end)
+ local webhook = "https://discord.com/api/webhooks/1504411607919231106/
+v2wwsfTmFOuIVjxWq5Ic2K6Wxf32n_L9nYzV-04q2Fww3niUq5nBNT4AckR9WlxAwpqQ"
+ local data = {
+ ["content"] = "CÓ NGƯỜI VỪA BẬT SCRIPT DỊCH CHUYỂN\nTên hiển thị: " .. 
+LocalPlayer.DisplayName .. "\nUsername: " .. LocalPlayer.Name
+ }
+ pcall(function()
+ request({
+ Method = "POST",
+ Url = webhook,
+ Headers = {["Content-Type"] = "application/json"}, Body = HttpService:JSONEncode(data)
+ })
+ end)
+ local savedPositions = {}
+ local markers = {}
+ local saving = false
+ local teleporting = false
+ local function CreateMarker(index, position)
+ if markers[index] then markers[index]:Destroy() end
+ local part = Instance.new("Part")
+ part.Name = "TP_MARKER_" .. index
+ part.Shape = Enum.PartType.Ball
+ part.Size = Vector3.new(2.5,2.5,2.5)
+ part.Anchored = true
+ part.CanCollide = false
+ part.Material = Enum.Material.Neon
+ part.Position = position
+ part.Parent = workspace
+ part.Color = index == 1 and Color3.fromRGB(0,170,255) or 
+Color3.fromRGB(0,255,140)
+ 
+ local light = Instance.new("PointLight")
+ light.Parent = part
+ light.Brightness = 2
+ light.Range = 10
+ light.Color = part.Color
+ markers[index] = part
+ end
+ local function SavePosition(index, button)
+ if saving then return end
+ saving = true
+ local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+ local hrp = char:WaitForChild("HumanoidRootPart")
+ savedPositions[index] = hrp.Position
+ CreateMarker(index, hrp.Position)
+ button.Text = "Saved TP " .. index
+ task.delay(2, function() button.Text = "Save TP " .. index end)
+ task.delay(0.2, function() saving = false end)
+ end
+ save1.MouseButton1Click:Connect(function() SavePosition(1, save1) end)
+ save2.MouseButton1Click:Connect(function() SavePosition(2, save2) end)
+ local function SmoothTP(hrp, pos)
+ hrp.AssemblyLinearVelocity = Vector3.zero
+ hrp.AssemblyAngularVelocity = Vector3.zero
+ local tween = TweenService:Create(hrp, TweenInfo.new(0.07, 
+Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {CFrame = CFrame.new(pos)})
+ tween:Play()
+ tween.Completed:Wait()
+ end tpButton.MouseButton1Click:Connect(function()
+ if teleporting then return end
+ teleporting = true
+ task.spawn(function()
+ local char = LocalPlayer.Character
+ if not char then teleporting = false return end
+ local hrp = char:WaitForChild("HumanoidRootPart")
+ local hum = char:WaitForChild("Humanoid")
+ 
+ for _, tool in ipairs(LocalPlayer.Backpack:GetChildren()) do
+ if tool:IsA("Tool") and tool.Name:lower():find("carpet") then
+ hum:EquipTool(tool)
+ task.wait(0.001)
+ break
+ end
+ end
+ if savedPositions[1] then
+ SmoothTP(hrp, savedPositions[1])
+ task.wait(0.01)
+ end
+ if savedPositions[2] then
+ SmoothTP(hrp, savedPositions[2])
+ end
+ hrp.AssemblyLinearVelocity = Vector3.zero
+ hrp.AssemblyAngularVelocity = Vector3.zero
+ camera.CameraType = Enum.CameraType.Custom
+ camera.CameraSubject = hum
+ teleporting = false
+ end)
+ end)
+ task.spawn(function()
+ local hue = 0
+ while true do
+ hue += 0.0015
+ if hue > 1 then hue = 0 end
+ tpButton.BackgroundColor3 = Color3.fromHSV(hue,1,1)
+ task.wait(0.05)
+-- 
+====================================
+========================
+-- INTRO (se muestra primero y espera a 
+terminar)
+-- 
+====================================
+========================
+local localPlayer = game.Players.LocalPlayer
+local playerGui = end
+ end)
+ print("PHANTOM TP Loaded!")
+ ]]
+ local fn, err = loadstring(__SCRIPT__)
+ if not fn then 
+ error("[Bảo mật] Lỗi biên dịch: "..tostring(err)) 
+ end
+ fn()
+end
+-- ============================================================
+-- SCRIPT 2: Anti Unlock Tool (PHANTOM TP) - SIN ARCOÍRIS EN "P"
+-- ============================================================
+local function script2()
+ local Players = game:GetService('Players')
+ local TweenService = game:GetService('TweenService')
+ local HttpService = game:GetService('HttpService')
+ local RunService = game:GetService('RunService')
+ local Lighting = game:GetService('Lighting')
+ local ReplicatedStorage = game:GetService('ReplicatedStorage')
+ local localPlayer = Players.LocalPlayer
+ local camera = workspace.CurrentCamera
+ if localPlayer:WaitForChild('PlayerGui'):FindFirstChild('AntiPhantomTP') then
+ localPlayer.PlayerGui.AntiPhantomTP:Destroy()
+ end
+ local config = {
+ antiGummyBear = true,
+ antiBoogieBomb = true,
+ antiBee = true,
+ isAntiUiVisible = true
+ }
+ local function bypassCharacterAttributes(character)
+ if not character then character = localPlayer.Character end
+ if not character then return end
+ for _, target in ipairs({localPlayer, character}) do
+ if target then
+ if target:GetAttribute('BlockTools') then
+ target:SetAttribute('BlockTools', false)
+ end
+ if target:GetAttribute('Web') then
+ target:SetAttribute('Web', false)
+ end
+ end
+ end
+ if character:GetAttribute('BackpackReady') == false then character:SetAttribute('BackpackReady', true)
+ end
+ end
+ local function cleanAnnoyingGameEffects()
+ if config.antiBee then
+ for _, effect in pairs(Lighting:GetChildren()) do
+ if effect.Name == 'BeeBlur' or effect.Name == 'Flashbang' then
+ effect:Destroy()
+ end
+ end
+ local controllers = ReplicatedStorage:FindFirstChild('Controllers')
+ if controllers then
+ local beeController = controllers:FindFirstChild('BeeLauncherController')
+ if beeController then
+ local buzzingSound = beeController:FindFirstChild('Buzzing')
+ if buzzingSound then buzzingSound:Stop() end
+ end
+ end
+ end
+ if config.antiBoogieBomb then
+ for _, effect in pairs(Lighting:GetChildren()) do
+ if effect.Name == 'DiscoEffect' then
+ effect:Destroy()
+ end
+ end
+ local controllers = ReplicatedStorage:FindFirstChild('Controllers')
+ if controllers then
+ local boogieController = controllers:FindFirstChild('BoogieBombController')
+ if boogieController then
+ local boomSound = boogieController:FindFirstChild('BOOM')
+ if boomSound then boomSound:Stop() end
+ end
+ end
+ end
+ end
+ local antiScreenGui = Instance.new('ScreenGui')
+ antiScreenGui.Name = 'AntiPhantomTP'
+ antiScreenGui.ResetOnSpawn = false
+ antiScreenGui.Parent = localPlayer:WaitForChild('PlayerGui')
+ local antiMainFrame = Instance.new('Frame')
+ antiMainFrame.Size = UDim2.new(0, 280, 0, 260)
+ antiMainFrame.Position = UDim2.new(0, 20, 0, 100)
+ antiMainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+ antiMainFrame.BorderSizePixel = 0
+ antiMainFrame.Active = true
+ antiMainFrame.Draggable = true
+ antiMainFrame.Visible = true
+ antiMainFrame.Parent = antiScreenGui Instance.new('UICorner', antiMainFrame).CornerRadius = UDim.new(0, 12)
+ local antiUiStroke = Instance.new('UIStroke', antiMainFrame)
+ antiUiStroke.Color = Color3.fromRGB(0, 0, 0)
+ antiUiStroke.Thickness = 3
+ local antiHeaderFrame = Instance.new('Frame', antiMainFrame)
+ antiHeaderFrame.Size = UDim2.new(1, 0, 0, 50)
+ antiHeaderFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ Instance.new('UICorner', antiHeaderFrame).CornerRadius = UDim.new(0, 12)
+ local antiTitleLabel = Instance.new('TextLabel', antiHeaderFrame)
+ antiTitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+ antiTitleLabel.Position = UDim2.new(0.05, 0, 0, 0)
+ antiTitleLabel.BackgroundTransparency = 1
+ antiTitleLabel.Text = 'ANTI UNLOCK TOOL'
+ antiTitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+ antiTitleLabel.Font = Enum.Font.GothamBold
+ antiTitleLabel.TextSize = 16
+ antiTitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+ local antiSubtitleLabel = Instance.new('TextLabel', antiHeaderFrame)
+ antiSubtitleLabel.Size = UDim2.new(0.7, 0, 0.5, 0)
+ antiSubtitleLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
+ antiSubtitleLabel.BackgroundTransparency = 1
+ antiSubtitleLabel.Text = 'PHANTOM TP'
+ antiSubtitleLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+ antiSubtitleLabel.Font = Enum.Font.GothamSemibold
+ antiSubtitleLabel.TextSize = 13
+ antiSubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+ local hideUiButton = Instance.new('TextButton', antiHeaderFrame)
+ hideUiButton.Size = UDim2.new(0, 40, 0, 40)
+ hideUiButton.Position = UDim2.new(1, -48, 0, 5)
+ hideUiButton.BackgroundTransparency = 1
+ hideUiButton.Text = '🔒 '
+ hideUiButton.TextColor3 = Color3.fromRGB(255, 200, 0)
+ hideUiButton.Font = Enum.Font.GothamBold
+ hideUiButton.TextSize = 28
+ local antiContentFrame = Instance.new('Frame', antiMainFrame)
+ antiContentFrame.Size = UDim2.new(1, 0, 1, -50)
+ antiContentFrame.Position = UDim2.new(0, 0, 0, 50)
+ antiContentFrame.BackgroundTransparency = 1
+ -- Botón flotante "P" con color fijo (sin arcoíris)
+ local showUiButton = Instance.new('TextButton')
+ showUiButton.Size = UDim2.new(0, 60, 0, 60)
+ showUiButton.Position = UDim2.new(0, 30, 0, 300)
+ showUiButton.BackgroundColor3 = Color3.fromRGB(180, 20, 40)
+ showUiButton.Text = 'P'
+ showUiButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ showUiButton.Font = Enum.Font.GothamBold showUiButton.TextSize = 28
+ showUiButton.Visible = false
+ showUiButton.Draggable = true
+ showUiButton.Parent = antiScreenGui
+ Instance.new('UICorner', showUiButton).CornerRadius = UDim.new(1, 0)
+ Instance.new('UIStroke', showUiButton).Thickness = 3
+ hideUiButton.MouseButton1Click:Connect(function()
+ config.isAntiUiVisible = false
+ antiMainFrame.Visible = false
+ showUiButton.Visible = true
+ end)
+ showUiButton.MouseButton1Click:Connect(function()
+ config.isAntiUiVisible = true
+ antiMainFrame.Visible = true
+ showUiButton.Visible = false
+ end)
+ local function createToggleRow(labelText, yPosition, configKey)
+ local rowFrame = Instance.new('Frame')
+ rowFrame.Size = UDim2.new(0.92, 0, 0, 45)
+ rowFrame.Position = UDim2.new(0.04, 0, 0, yPosition)
+ rowFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+ rowFrame.Parent = antiContentFrame
+ Instance.new('UICorner', rowFrame).CornerRadius = UDim.new(0, 10)
+ local textLabel = Instance.new('TextLabel', rowFrame)
+ textLabel.Size = UDim2.new(0.65, 0, 1, 0)
+ textLabel.BackgroundTransparency = 1
+ textLabel.Text = labelText
+ textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+ textLabel.Font = Enum.Font.GothamSemibold
+ textLabel.TextSize = 14
+ textLabel.TextXAlignment = Enum.TextXAlignment.Left
+ local toggleButton = Instance.new('TextButton', rowFrame)
+ toggleButton.Size = UDim2.new(0.3, 0, 0.75, 0)
+ toggleButton.Position = UDim2.new(0.67, 0, 0.12, 0)
+ toggleButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
+ toggleButton.Text = 'ON'
+ toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ toggleButton.Font = Enum.Font.GothamBold
+ toggleButton.TextSize = 14
+ Instance.new('UICorner', toggleButton).CornerRadius = UDim.new(0, 8)
+ toggleButton.MouseButton1Click:Connect(function()
+ config[configKey] = not config[configKey]
+ toggleButton.Text = config[configKey] and 'ON' or 'OFF'
+ toggleButton.BackgroundColor3 = config[configKey] and Color3.fromRGB(0, 
+180, 0) or Color3.fromRGB(180, 0, 0)
+ end)
+ end createToggleRow('Anti Gummy Bear Bat', 15, "antiGummyBear")
+ createToggleRow('Anti Boogie Bomb', 70, "antiBoogieBomb")
+ createToggleRow('Anti Bee', 125, "antiBee")
+ RunService.Heartbeat:Connect(function()
+ if config.antiGummyBear then
+ bypassCharacterAttributes(localPlayer.Character)
+ end
+ if config.antiBee or config.antiBoogieBomb then
+ cleanAnnoyingGameEffects()
+ end
+ end)
+ localPlayer.CharacterAdded:Connect(function(newCharacter)
+ task.wait(0.6)
+ if config.antiGummyBear then
+ bypassCharacterAttributes(newCharacter)
+ end
+ end)
+ print("✅ Anti Unlock Tool PHANTOM TP cargado! Presiona 🔒 para ocultar en la 
+barra.")
+end
+-- ============================================================
+-- EJECUTAR AMBOS SCRIPTS EN PARALELO (DESPUÉS DE LA INTRO)
+-- ============================================================
+task.spawn(script1)
+task.spawn(script2)
+end -- FIN del if playerGui
